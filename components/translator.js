@@ -7,6 +7,8 @@ class Translator {
 
 //https://stackoverflow.com/questions/17264639/replace-text-but-keep-case
 
+//regex for time : \d\.\d && \d\:\d
+
     matchCase(text, pattern) {
         var result = '';
     
@@ -26,64 +28,85 @@ class Translator {
 
         var str = text
         var regex
+        var translated = false
+
+        // str = str.replace()
+
+        if((text == undefined) || (locale == undefined))
+          return { error: 'Required field(s) missing' }
 
         if(text == "")
-            return {error: "empty string"}
+            return { error: 'No text to translate' }
 
         if(locale === "american-to-british"){
+
+            //Time management
+            regex = new RegExp("\\d{1,2}\:\\d{1,2}","gi")
+            str = str.replace(str.match(regex).toString(),str.match(regex).toString().replace(":","."))
+
             Object.keys(americanOnly).forEach(word =>{
-                console.log(word)
                 regex = new RegExp("\\b" + word + "\\b","gi")
                 
-                if(str.match(regex) != null)
-                    console.log("Match : " + str.match(regex))
-                
-                    if(regex.test(text))
-                    str = str.replace(regex, this.matchCase(americanOnly[word],str.match(regex).toString()))
+                if(regex.test(text)){
+                    translated = true
+                    str = str.replace(regex, '<span class=\"highlight\">' + this.matchCase(americanOnly[word],str.match(regex).toString()) + '</span>')
+                    }
             })
 
             Object.keys(americanToBritishTitles).forEach(word =>{
-                regex = new RegExp("\\b" + word + "\\b","gi")
+                regex = new RegExp(word,"gi")
 
-                if(str.match(regex) != null)
-                console.log("Match : " + str.match(regex))
-
-                if(regex.test(text))
-                    str = str.replace(regex, this.matchCase(americanToBritishTitles[word],  str.match(regex).toString()))
+                if(regex.test(text)){
+                  console.log("Were here!")
+                    translated = true
+                    str = str.replace(regex, '<span class=\"highlight\">' + this.matchCase(americanToBritishTitles[word],  str.match(regex).toString()) + '</span>')
+                }
             })
 
             Object.keys(americanToBritishSpelling).forEach(word =>{
                 regex = new RegExp("\\b" + word + "\\b","gi")
 
-                if(str.match(regex) != null)
-                console.log("Match : " + str.match(regex))
-
-                if(regex.test(text))
-                    str = str.replace(regex, this.matchCase(americanToBritishSpelling[word],  str.match(regex).toString()))
+                if(regex.test(text)){
+                    translated = true
+                    str = str.replace(regex, '<span class=\"highlight\">' + this.matchCase(americanToBritishSpelling[word],  str.match(regex).toString()) + '</span>')
+                }
             })
         }else if(locale === "british-to-american"){
+
+            //Time Management
+            regex = new RegExp("\\d{1,2}\.\\d{1,2}","gi")
+            str = str.replace(str.match(regex).toString(),str.match(regex).toString().replace(".",":"))
+
             Object.keys(britishOnly).forEach(word =>{
-                console.log(word)
                 regex = new RegExp("\\b" + word + "\\b","gi")
-                if(regex.test(text))
-                    str = str.replace(regex, britishOnly[word])
-                    
+                
+                    if(regex.test(text)){
+                        translated = true
+                        str = str.replace(regex, '<span class=\"highlight\">' + this.matchCase(britishOnly[word],str.match(regex).toString()) + '</span>')
+                    }
             })
 
             Object.keys(americanToBritishTitles).forEach(word =>{
-                regex = new RegExp("\\b" + americanToBritishTitles[word] + "\\b","gi")
+                regex = new RegExp(americanToBritishTitles[word],"gi")
+       
                 if(regex.test(text))
-                    str = str.replace(regex, word)
+                    str = str.replace(regex, '<span class=\"highlight\">' + this.matchCase(word,str.match(regex).toString()) + '</span> ')
             })
 
             Object.keys(americanToBritishSpelling).forEach(word =>{
                 regex = new RegExp("\\b" + americanToBritishSpelling[word] + "\\b","gi")
-                if(regex.test(text))
-                    str = str.replace(regex, word)
+       
+                if(regex.test(text)){
+                    translated = true
+                    str = str.replace(regex, '<span class=\"highlight\">' + this.matchCase(word,str.match(regex).toString()) + '</span>')
+                }
             })
-        }
+        } else return { error: 'Invalid value for locale field' }
 
-    return {text: text, translation: str}   
+        if(!translated)
+            str = "Everything looks good to me!"
+
+        return {text: text, translation: str}   
     }
 
 }
