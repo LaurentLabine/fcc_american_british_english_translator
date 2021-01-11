@@ -42,7 +42,11 @@ class Translator {
 
             //Time management
             regex = new RegExp("\\d{1,2}\:\\d{1,2}","gi")
-            str = str.replace(str.match(regex).toString(),str.match(regex).toString().replace(":","."))
+            if(str.match(regex)){
+              translated = true
+              str = str.replace(str.match(regex).toString(),'<span class=\"highlight\">' + str.match(regex).toString().replace(":",".") + '</span>')
+
+            }
 
             Object.keys(americanOnly).forEach(word =>{
                 regex = new RegExp("\\b" + word + "\\b","gi")
@@ -57,7 +61,6 @@ class Translator {
                 regex = new RegExp(word,"gi")
 
                 if(regex.test(text)){
-                  console.log("Were here!")
                     translated = true
                     str = str.replace(regex, '<span class=\"highlight\">' + this.matchCase(americanToBritishTitles[word],  str.match(regex).toString()) + '</span>')
                 }
@@ -75,7 +78,10 @@ class Translator {
 
             //Time Management
             regex = new RegExp("\\d{1,2}\.\\d{1,2}","gi")
-            str = str.replace(str.match(regex).toString(),str.match(regex).toString().replace(".",":"))
+            if(str.match(regex)){  
+              translated = true            
+              str = str.replace(str.match(regex).toString(),'<span class=\"highlight\">' + str.match(regex).toString().replace(".",":") + '</span>')
+            }
 
             Object.keys(britishOnly).forEach(word =>{
                 regex = new RegExp("\\b" + word + "\\b","gi")
@@ -89,8 +95,10 @@ class Translator {
             Object.keys(americanToBritishTitles).forEach(word =>{
                 regex = new RegExp(americanToBritishTitles[word],"gi")
        
-                if(regex.test(text))
+                if(regex.test(text)){
+                    translated = true
                     str = str.replace(regex, '<span class=\"highlight\">' + this.matchCase(word,str.match(regex).toString()) + '</span> ')
+                }
             })
 
             Object.keys(americanToBritishSpelling).forEach(word =>{
