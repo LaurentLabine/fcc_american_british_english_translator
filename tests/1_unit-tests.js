@@ -90,6 +90,15 @@ suite('Unit Tests', () => {
             done();
         }); 
 
+        test('Lunch is at 12:15 today.', function(done) {
+            let text = 'Lunch is at 12:15 today.';
+            let locale = 'american-to-british'
+            let res = translator.translate(text, locale)
+            assert.equal(res.text,'Lunch is at 12:15 today.')
+            assert.equal(res.translation,'Lunch is at <span class=\"highlight\">12.15</span> today.')
+            done();
+        });         
+
         test('We watched the footie match for a while.', function(done) {
             let text = 'We watched the footie match for a while.';
             let locale = 'american-to-british'
