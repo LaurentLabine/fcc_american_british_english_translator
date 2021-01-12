@@ -170,7 +170,7 @@ suite('Unit Tests', () => {
             let locale = 'british-to-american'
             let res = translator.translate(text, locale)
             assert.equal(res.text,'Prof Joyner of King\'s College, London.')
-            assert.equal(res.translation,'<span class="highlight">Prof.</span>  Joyner of King\'s College, London.')
+            assert.equal(res.translation,'<span class="highlight">Prof.</span> Joyner of King\'s College, London.')
             done();
         }); 
 
